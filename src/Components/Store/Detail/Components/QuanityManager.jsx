@@ -7,7 +7,7 @@ export default function ItemManager({ addItem, removeItem, saveProduct}){
     return ( 
         <>
         <div>
-            <div className="button-item-manager-area">
+            <div className="button-item-manager-area" style={{display: "flex"}}>
             <button className="button-add" onClick={addItem}>+</button>
             <button className="button-remove" onClick={removeItem}>-</button>
             </div>

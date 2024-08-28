@@ -1,23 +1,20 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import ErrorMessage from "./Components/ErrorMessage";
 import { useDispatch } from "react-redux";
-import { login as loginRedux } from "../../../redux/slice/userSlice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../../redux/slice/userSlice";
 import { PrivateRoutes } from "../../Navbar/Links/linkRoutes";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { LoginService } from "../../../Service/AuthService";
-import { LoginActions } from "./utils/LoginActions";
-import { setAndPersistLocalStorage } from "../../../helpers/LocalStorageActions";
+import ErrorMessage from "./Components/ErrorMessage";
+import { LoginUser } from "./Service/Login.service";
 
 export default function Login() {
+  const initialErrorMessage = { status: false, message: "" };
+
   const nav = useNavigate();
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState({ status: false, message: "" });
+  const [error, setError] = useState(initialErrorMessage);
 
   function handleEmailChange(event) {
     setEmail(event.target.value);
@@ -30,51 +27,37 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const url = "https://techstorebackend-1sdx.onrender.com/auth/login";
-    const bodyRequest = {
-      email: email,
-      password: password,
+    const fetchLogin = async () => {
+      const resp = await LoginUser({ email, password });
+      const data = await resp.json();
+
+      if (!data.error) {
+        const loginObj = {
+          token: data.token,
+          email: data.user.email,
+          admin: data.user.admin,
+        };
+        dispatch(loginUser(loginObj));
+        nav(PrivateRoutes.STORE, { replace: true });
+      } else {
+        setError({ message: data.error, status: true });
+      }
     };
 
-    fetch(url, {
-      method: "POST",
-      body: JSON.stringify(bodyRequest),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((resp) => resp.json())
-      .then((resp) => {
-        if (!resp.error) {
-
-          const loginObj = {
-            token: resp.token,
-            email: resp.user.email,
-            admin: resp.user.admin,
-          };
-
-          dispatch(loginRedux(loginObj));
-          nav("/store", { replace: true });
-
-        } else {
-          console.log("error");
-          setError({ message: resp.error, status: true });
-        }
-      });
+    fetchLogin();
   };
 
   return (
     <div className="container-auth">
       <form onSubmit={handleSubmit} action="" className="auth-form">
         {error.status && <ErrorMessage message={error.message} />}
-        <FontAwesomeIcon
-          style={{ marginBottom: "1rem", color: "#166cfd" }}
-          className="fa-4x"
-          icon={faUser}
+        <img
+          src="./techlogo.png"
+          style={{ width: "150px", marginBottom: "1rem" }}
         />
         <div className="input-header-text-area">
           <div className="in">
-            <b className="text-title-auth-title">Welcome Back!</b>
+            <b className="text-title-auth-title">Hi there!</b>
             <p className="text-title-auth-text">
               Please add the required info.
             </p>
@@ -108,7 +91,7 @@ export default function Login() {
         <button className="form-auth-btn">Login</button>
         <div className="footer-form">
           <b className="dont-have-account-flag">
-            Dont have an account. <Link to="/signup">Sign Up</Link>
+            Dont have an account? <Link to="/signup">Sign Up</Link>
           </b>
         </div>
       </form>

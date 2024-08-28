@@ -6,7 +6,7 @@ import { useState } from "react";
 import { SignUpService } from "../../../Service/AuthService";
 import { setAndPersistLocalStorage } from "../../../helpers/LocalStorageActions";
 import { useDispatch } from "react-redux";
-import { login as loginRedux } from "../../../redux/slice/userSlice";
+import { loginUser } from "../../../redux/slice/userSlice";
 
 export default function Signup(){ 
 
@@ -32,7 +32,7 @@ export default function Signup(){
 
         setAndPersistLocalStorage('access-token', data.token)
         nav('/store', { replace: true });
-        dispatch(loginRedux({ token: data.token, email: data.user.email, admin: false}))
+        dispatch(loginUser({ token: data.token, email: data.user.email, admin: false}))
 
         }catch(error){ 
             setError({status: true, message: error.response.data.error})
@@ -46,9 +46,10 @@ export default function Signup(){
             {error.status && <ErrorMessage message={error.message}/>}
     </div>
             <div className="input-header-text-area">
-            <FontAwesomeIcon style={{color: '#166cfd'}} className="fa-4x" icon={faRightToBracket} />
+            {/* <FontAwesomeIcon style={{color: '#166cfd'}} className="fa-4x" icon={faRightToBracket} /> */}
+            <img src="./techlogo.png" style={{width: '150px', marginBottom: "1rem"}}/>
                 <div className="in">
-                    <b className="text-title-auth-title">Sign Up</b>
+                    <b className="text-title-auth-title">Welcome!</b>
                     <p className="text-title-auth-text">Please add the required info.</p>
                 </div>
             </div>
@@ -71,34 +72,9 @@ export default function Signup(){
             </div>
             <button className="form-auth-btn" onClick={HandleSignup}>Sign Up</button>
             <div className="footer-form">
-            <b className="dont-have-account-flag">Already have an account. <Link to='/login'>Login</Link></b>
+            <b className="dont-have-account-flag">Already have an account? <Link to='/login'>Login</Link></b>
             </div>
         </form>
 </div>
     )
 }
-
-
-    // function HandleSignup(e){ 
-    //     e.preventDefault();
-
-    //     fetch('http://localhost:8080/auth/signup', { 
-    //         headers: { 
-    //             "Content-Type": "application/json"
-    //         }, 
-    //         body: JSON.stringify({ 
-    //             firstname, 
-    //             lastname, 
-    //             email, 
-    //             password
-    //         }), 
-    //         method: "POST"
-    //     })
-    //     .then((resp) => resp.json())
-    //     .then((resp) => { 
-    //         if(!resp.error){ 
-    //             localStorage.setItem('access-data', JSON.stringify({token: resp.token, email: resp.user.email, admin: false, auth: true }))
-    //             dispatch(loginRedux({token: resp.token, email: resp.user.email, admin: false}))
-    //             nav(PrivateRoutes.HOME, {replace: true})
-    //         }
-    //     })

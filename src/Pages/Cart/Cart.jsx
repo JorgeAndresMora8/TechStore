@@ -1,7 +1,6 @@
 import { useContext } from "react"
 import { CartContext } from "../../context/context"
-import CartList from "./Components/CartList"
-import NoProductMessage from "./Components/NoProductsMessage"
+import { CartList, NoProductMessage } from "./Components"
 
 export default function Cart(){ 
 

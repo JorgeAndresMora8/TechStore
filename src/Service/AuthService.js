@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "./Config/URL";
 
 export function LoginAction(data) {
     const nav = useNavigate()
@@ -62,31 +63,10 @@ export const LoginService = async (email, password) => {
   let loginResponse;
 
   axios
-    .post("https://techstorebackend-1sdx.onrender.com/auth/login", BodyRequest, config)
+    .post(BACKEND_URL + "/auth/login", BodyRequest, config)
     .then((resp) => LoginAction(resp.data))
     .catch((error) => console.log("Hubo un error", error));
 };
-
-//   if (!resp.error) {
-//     localStorage.setItem(
-//       "access-token",
-//       JSON.stringify({
-//         token: resp.token,
-//         email: resp.user.email,
-//         admin: false,
-//         auth: true,
-//       })
-//     );
-//     dispatch(
-//       loginRedux({ token: resp.token, email: resp.user.email, admin: false })
-//     );
-//     nav(PrivateRoutes.HOME, { replace: true });
-//   } else {
-//     console.log("error");
-//     setError({ message: resp.error, status: true });
-//   }
-
-
 
 
 export const SignUpService = async (data) => { 
@@ -94,7 +74,7 @@ export const SignUpService = async (data) => {
     const requestBody = JSON.stringify(data)
 
 
-    return await axios.post('https://techstorebackend-1sdx.onrender.com/auth/signup', requestBody, { 
+    return await axios.post(BACKEND_URL + '/auth/signup', requestBody, { 
         headers: { 
             "Content-Type": "application/json"
         }})

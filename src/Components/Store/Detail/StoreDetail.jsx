@@ -1,24 +1,22 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import DetailContainer from "./Components/detailContainer";
 import LoadingPage from "../../../Loading/LoadingPage";
 import { ProductId } from "../../../Service/ProductService";
+import { useAsync } from "../../../hooks/asyncComponentCleanHook";
+import useFetchAndLoads from "../../../hooks/useFetchAndLoads";
+import DetailContainer from "./Components/detailContainer";
 
 export default function StoreDetail() {
   const [product, setProduct] = useState({});
-  const [loading, setLoading] = useState(true);
 
   let { id } = useParams();
+  const { loading, callEndpoint } = useFetchAndLoads()
 
-  const fetchProduct = async () => {
-    const { data } = await ProductId(id);
-    setProduct(data);
-    setLoading(false);
-  };
+  const getApiData = async () => await callEndpoint(ProductId(id))
 
-  useEffect(() => {
-    fetchProduct();
-  }, []);
+  const adaptData = (data) => setProduct(data)
+
+  useAsync(getApiData, adaptData, () => { }, [] )
 
   return loading ? <LoadingPage /> : <DetailContainer product={product} />;
 }

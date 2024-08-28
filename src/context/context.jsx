@@ -1,15 +1,16 @@
-import { createContext, useState, useEffect } from 'react'
+import { createContext, useState, useEffect, useContext } from 'react'
+import { getFromLocalStorage, setAndPersistLocalStorage } from "../helpers/LocalStorageActions"
 
 export const CartContext = createContext()
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState(localStorage.getItem('cartItems') ? JSON.parse(localStorage.getItem('cartItems')) : [])
+  const [cartItems, setCartItems] = useState(getFromLocalStorage('cartItems') ? getFromLocalStorage('cartItems') : [])
 
   const addToCart = (item) => {
     const isItemInCart = cartItems.find((cartItem) => cartItem.id === item.id);
-    console.log(item)
 
     if (isItemInCart) {
+
       setCartItems(
         cartItems.map((cartItem) =>
           cartItem.id === item.id
@@ -17,19 +18,17 @@ export const CartProvider = ({ children }) => {
             : cartItem
         )
       );
-      console.log('el product ya esta en el carrito')
+
     } else {
-      setCartItems([...cartItems, { ...item }]);
+      setCartItems([...cartItems, item]);
     }
   };
 
   const removeFromCart = (item) => {
 
-    // const isItemInCart = cartItems.find((cartItem) => cartItem.id === item.id);
-    // console.log(isItemInCart)
-
     if (item.quantity === 1) {
-      setCartItems(cartItems.filter((cartItem) => cartItem.id !== item.id));
+      const updatedList = cartItems.filter((cartItem) => cartItem.id !== item.id)
+      setCartItems(updatedList);
     } else {
       setCartItems(
         cartItems.map((cartItem) =>
@@ -49,19 +48,21 @@ export const CartProvider = ({ children }) => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
+  useEffect( () => localStorage.setItem("cartItems", JSON.stringify(cartItems)), [cartItems]);
+
 
   useEffect(() => {
     const cartItems = localStorage.getItem("cartItems");
     if (cartItems) {
       setCartItems(JSON.parse(cartItems));
     }
+
+    // getFromLocalStorage("cartItems") ? && 
   }, []);
 
   const removeOneFromCart = (productId) => { 
-    setCartItems(cartItems.filter((product) => product.id !== productId))
+    const listUpdated = cartItems.filter((product) => product.id !== productId)
+    setCartItems(listUpdated)
   }
 
   return (
@@ -79,3 +80,7 @@ export const CartProvider = ({ children }) => {
     </CartContext.Provider>
   );
 };
+
+export function CartContextProvider(){ 
+  return useContext(CartContext)
+}

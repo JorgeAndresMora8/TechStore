@@ -11,14 +11,15 @@ export default function SearchBar({handleSearch}){
 
     //SELECT VALUES
 
+    // obtiene los datos de los campos y llama a la funcion que hace la llamada a la api
     function handleSearchAction(){ 
-        const searchName = (inputRef.current.value)
+        const name = (inputRef.current.value)
         const brand = (brandRef.current.value)
         const price = (priceRef.current.value)
         const category = (categoryRef.current.value)
 
         try {
-            handleSearch({searchName, brand, price, category})
+            handleSearch({name, brand, price, category})
         } catch (error) {
             console.log(error)
         }
@@ -28,8 +29,8 @@ export default function SearchBar({handleSearch}){
     return ( 
         <div className="search-bar-container">
             <div className="search-bar-text-area">
-            <b>Search</b>
-            <p>Look up for your favorite products</p>
+            <b>Search <span style={{color: "#166CFD"}}>here!</span></b>
+            <p>Find your perfect tech match in our diverse selection today!</p>
             </div>
            <div className="search-bar-area">
                 <input ref={inputRef} type="search" name="user-input" placeholder="search products..."/>
@@ -45,18 +46,18 @@ export default function SearchBar({handleSearch}){
                 </select>
                 <select ref={priceRef}>
                     <option value="0">price</option>
-                    <option value="100">100</option>
-                    <option value="250">250</option>
-                    <option value="500">500</option>
-                    <option value="1000">1000</option>
-                    <option value="2000">2000</option>
+                    <option value="100">less than 100</option>
+                    <option value="250">less than 250</option>
+                    <option value="500">less than 500</option>
+                    <option value="1000">less than 1000</option>
+                    <option value="2000">less than 2000</option>
                 </select>
                 <select ref={categoryRef}>
                     <option value="">category</option>
                     <option value="cellphone">phone</option>
                     <option value="TV">TV</option>
                     <option value="watch">watch</option>
-                    <option value="headphone">headphone</option>
+                    <option value="headphones">headphone</option>
                 </select>
             </div>
             {/* <div style={{width: "80%", height: "auto", display: "flex", justifyContent: "flex-end", alignItems: "flex-end"}}>

@@ -24,4 +24,5 @@ export const PrivateRoutes = {
     ADMIN_USERS: '/adminusers',
     PAYMENT: '/payment',
     PAYMENT_STATUS: '/payment/status',
+    CONTACT: '/contact',
 }

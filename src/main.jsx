@@ -10,11 +10,11 @@ import { AxiosInterceptor } from './interceptors/axios.interceptors.js'
 // AxiosInterceptor()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <CartProvider>
         <App />
       </CartProvider>
     </Provider>
-  </React.StrictMode>,
+  // </React.StrictMode>,
 )

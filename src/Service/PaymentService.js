@@ -1,4 +1,5 @@
 import axios from "axios"
+import { BACKEND_URL } from "./Config/URL";
 
 export const MakePaymentService = async (paymentObj) => {
     
@@ -19,7 +20,7 @@ export const MakePaymentService = async (paymentObj) => {
     //   });
 
     try {
-        await axios.post('https://techstorebackend-1sdx.onrender.com/payment', JSON.stringify(paymentObj), config)
+        await axios.post((BACKEND_URL + '/payment'), JSON.stringify(paymentObj), config)
         return true
     } catch (error) {
         return false

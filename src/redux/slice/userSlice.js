@@ -15,21 +15,19 @@ export const authSlice = createSlice({
     initialState, 
 
     reducers: { 
-        login: (state, action) => {
+        loginUser: (state, action) => {
             const { token, email } = action.payload
-            state.token = token
-            state.email = email
-
             setAndPersistLocalStorage(LOCAL_STORAGE_KEY.auth_data, { email: email, token: token })
 
+            return { token, email }
+
         }, 
-        logout: (state) => {
+        logoutUser: () => {
             setAndPersistLocalStorage(LOCAL_STORAGE_KEY.auth_data, initialState)
-            state.token = ''
-            state.email = ''
+            return initialState
         }
     }
 })
 
-export const { login, logout } = authSlice.actions;
+export const { loginUser, logoutUser } = authSlice.actions;
 export default authSlice.reducer
